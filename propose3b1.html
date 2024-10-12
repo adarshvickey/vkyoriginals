@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Proposal</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(45deg, #ff4d4d, #ffcccc, #ff4d4d);
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+            animation: rgbGradient 5s infinite;
+            background-size: 200% 200%;
+        }
+
+        header h1 {
+            font-size: 4em;
+            margin: 0;
+            animation: textGlow 2s infinite alternate;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-size: 1.5em;
+            margin: 10px 0 0;
+            animation: fadeIn 3s ease-in-out;
+        }
+
+        /* Main Section */
+        section {
+            text-align: center;
+            margin: 50px 20px;
+            background-color: #333;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInSection 3s ease-in-out;
+        }
+
+        section h2 {
+            font-size: 3em;
+            background: -webkit-linear-gradient(45deg, #ff4d4d, #ffb6b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glowText 5s infinite alternate;
+        }
+
+        section p {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #ddd;
+            animation: slideUpText 4s ease-in-out;
+        }
+
+        /* Button */
+        .button {
+            background-color: #ff4d4d;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1.2em;
+            border-radius: 10px;
+            transition: transform 0.4s, background-color 0.4s;
+            display: inline-block;
+            margin-top: 20px;
+            animation: pulseButton 1.5s infinite;
+        }
+
+        .button:hover {
+            background-color: #ff1a1a;
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #ff4d4d;
+            color: white;
+            margin-top: 30px;
+        }
+
+        /* Animations */
+        @keyframes rgbGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+            100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+        }
+
+        @keyframes glowText {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeInSection {
+            0% { opacity: 0; transform: translateY(100px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUpText {
+            0% { opacity: 0; transform: translateY(100px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseButton {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Heart Animation */
+        .heart {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 77, 77, 0.9);
+            clip-path: polygon(50% 0%, 100% 37%, 82% 100%, 50% 82%, 18% 100%, 0% 37%);
+            opacity: 0;
+            animation: heartFadeIn 3s ease-in-out forwards, heartExplode 4s ease-in-out 2s forwards;
+        }
+
+        @keyframes heartFadeIn {
+            0% { opacity: 0; transform: scale(0); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes heartExplode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+
+        /* Star Animation */
+        .star {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: starExplosion 3s ease-in-out forwards;
+        }
+
+        @keyframes starExplosion {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            100% { opacity: 1; transform: translate(var(--x), var(--y)) scale(1); }
+        }
+
+        /* Random positions for stars */
+        .star:nth-child(odd) {
+            --x: 100px;
+            --y: 200px;
+        }
+
+        .star:nth-child(even) {
+            --x: -150px;
+            --y: -100px;
+        }
+
+        /* Random star delays */
+        .star:nth-child(3) { animation-delay: 2.5s; }
+        .star:nth-child(5) { animation-delay: 3s; }
+        .star:nth-child(7) { animation-delay: 3.5s; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Will You Be Mine?</h1>
+    <p>A Proposal from the Heart</p>
+</header>
+
+<section>
+    <h2>My Heart Belongs to You</h2>
+    <p>
+        From the moment I saw you, my world changed. 
+        Every moment we spend together makes me fall deeper in love with you. 
+        My love for you is endless, and I want to spend the rest of my life 
+        showing you just how much you mean to me.
+    </p>
+    <p>
+        Will you be the one I share my heart and future with?
+    </p>
+    <a href="#" class="button">Yes, Forever!</a>
+
+    <!-- Heart animation -->
+    <div class="heart"></div>
+
+    <!-- Star explosion animation -->
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+    <div class="star"></div>
+</section>
+
+<footer>
+    <p>With endless love, adarsh VICKEY </p>
+</footer>
+
+</body>
+</html>

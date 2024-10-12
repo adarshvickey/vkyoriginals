@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You Sonam</title>
+    <style>
+        /* Background animation */
+        @keyframes backgroundAnimation {
+            0% { background-color: rgb(240, 248, 255); }
+            25% { background-color: rgb(255, 228, 225); }
+            50% { background-color: rgb(255, 240, 245); }
+            75% { background-color: rgb(230, 230, 250); }
+            100% { background-color: rgb(240, 248, 255); }
+        }
+
+        /* Text animation */
+        @keyframes textAnimation {
+            0% { transform: scale(1); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+            animation: backgroundAnimation 10s infinite alternate; /* Background changes color */
+        }
+
+        h1 {
+            font-size: 2em;
+            color: rgb(60, 179, 113); /* Medium sea green */
+            text-shadow: 2px 2px rgb(0, 0, 128); /* Navy blue shadow */
+            animation: textAnimation 3s ease-in-out infinite alternate; /* Text scaling animation */
+            margin: 0;
+        }
+
+        p {
+            font-size: 1.5em;
+            color: rgb(255, 99, 71); /* Tomato color */
+            animation: textAnimation 3s ease-in-out 1s infinite alternate; /* Delayed text scaling */
+            margin: 0;
+        }
+
+        .centered-content {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="centered-content">
+        <h1>Love you Anjlena</h1>
+        <p>by aryan</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space with Falling Stars and Hearts</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Lobster, sans-serif;
+        }
+
+        #bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .popup {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 20px;
+            width: 400px;
+            height: 250px;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            font-size: 20px;
+            color: #000;
+            z-index: 10;
+        }
+
+        .popup p {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .popup small {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .popup button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: white;
+            color: black;
+            transition: background-color 0.3s;
+            height: 50px;
+            width: 130px;
+        }
+
+        .popup button:hover {
+            background-color: #d13368;
+        }
+
+        #spin-icon {
+            margin-top: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #28a745;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 10;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #spin-icon:hover {
+            background-color: #218838;
+        }
+
+        #spin-icon:after {
+            content: '🎡';
+            font-size: 30px;
+        }
+
+        #wheel-container {
+            display: none; /* Hide by default */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="bg-animation"></div>
+
+    <div class="popup">
+        <p id="effect-text">Last time let it be in our luck</p>
+        <small>Spin the wheel and tap the result yes or no</small>
+        <button id="yes-btn">Yes 🍁</button>
+        <button id="no-btn">No❌</button>
+    </div>
+
+    <div id="spin-icon"></div>
+
+    <div id="wheel-container">
+        <canvas id="wheel" width="300" height="300"></canvas>
+        <div id="result" class="hidden"></div>
+        <button id="respin-btn" style="display: none;">Spin Again</button>
+        <button id="close-btn">Close</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js background animation code
+        // (same as previously shared, omitted for brevity)
+
+        // Spin the wheel functionality
+        const spinIcon = document.getElementById('spin-icon');
+        const wheelContainer = document.getElementById('wheel-container');
+        const wheelCanvas = document.getElementById('wheel');
+        const ctx = wheelCanvas.getContext('2d');
+        const resultDisplay = document.getElementById('result');
+        const respinBtn = document.getElementById('respin-btn');
+        let spinning = false;
+
+        const colors = ['#FF5733', '#33FF57', '#3357FF', '#F0FF33', '#FF33A8', '#33FFF5'];
+        
+        function drawWheel() {
+            const sections = colors.length;
+            const sectionAngle = (2 * Math.PI) / sections;
+
+            for (let i = 0; i < sections; i++) {
+                ctx.beginPath();
+                ctx.moveTo(150, 150);
+                ctx.arc(150, 150, 140, i * sectionAngle, (i + 1) * sectionAngle);
+                ctx.fillStyle = colors[i];
+                ctx.fill();
+                ctx.stroke();
+            }
+        }
+
+        drawWheel();
+
+        spinIcon.addEventListener('click', () => {
+            if (!spinning) {
+                wheelContainer.style.display = 'block';
+                spinWheel();
+            }
+        });
+
+        function spinWheel() {
+            spinning = true;
+            const randomDegree = Math.random() * 360 + 360 * 5; // Spin 5 full rounds plus some random
+            const spinDuration = 4000; // Spin duration in milliseconds
+            let start = null;
+
+            const animateSpin = (timestamp) => {
+                if (!start) start = timestamp;
+                const elapsed = timestamp - start;
+                const progress = Math.min(elapsed / spinDuration, 1);
+                const rotation = progress * randomDegree;
+
+                wheelCanvas.style.transform = `rotate(${rotation}deg)`;
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateSpin);
+                } else {
+                    const resultIndex = Math.floor(((rotation % 360) / (360 / colors.length)) % colors.length);
+                    resultDisplay.innerText = `Result: ${resultIndex + 1} (${colors[resultIndex]})`;
+                    resultDisplay.style.display = ''; // Show result
+                    spinning = false;
+                    respinBtn.style.display = 'block'; // Show respin button
+                }
+            };
+            requestAnimationFrame(animateSpin);
+        }
+
+        respinBtn.addEventListener('click', () => {
+            resultDisplay.style.display = 'none'; // Hide previous result
+            respinBtn.style.display = 'none'; // Hide respin button
+            wheelCanvas.style.transform = 'rotate(0deg)'; // Reset rotation
+            spinWheel(); // Spin again
+        });
+
+        document.getElementById('close-btn').addEventListener('click', () => {
+            wheelContainer.style.display = 'none';
+            wheelCanvas.style.transform = 'rotate(0deg)'; // Reset rotation
+            resultDisplay.innerText = ''; // Clear result text
+            resultDisplay.style.display = 'none'; // Hide result display
+            respinBtn.style.display = 'none'; // Hide respin button
+        });
+
+        // Handle button clicks for yes and no
+        document.getElementById('yes-btn').addEventListener('click', () => {
+            window.location.href = "propose2.html"; // Redirect to the next page
+        });
+
+        document.getElementById('no-btn').addEventListener('click', () => {
+            window.location.href = "propose2.html";
+        });
+
+        // Apply rainbow effect on load
+        window.onload = () => {
+            const textElement = document.getElementById('effect-text');
+            textElement.style.animation = 'rainbowEffect 3s linear';
+            setTimeout(() => {
+                textElement.style.animation = ''; // Reset animation
+                textElement.style.color = ''; // Reset to default color (black)
+            }, 3000);
+        };
+    </script>
+</body>
+</html>

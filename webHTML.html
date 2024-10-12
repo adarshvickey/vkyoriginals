@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced HTML Editor and Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/material.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        #controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+        #editorContainer {
+            width: 100%;
+            max-width: 800px;
+            height: 200px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        #editor {
+            flex-grow: 1;
+        }
+        iframe {
+            width: 100%;
+            height: 70vh;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: height 0.3s ease;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="file"] {
+            margin-right: 10px;
+        }
+        #settingsPanel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.75);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        #settingsPanel h3 {
+            margin-top: 0;
+        }
+        #settingsPanel button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <input type="file" id="fileInput" accept=".html">
+        <button onclick="toggleSettings()">Settings</button>
+    </div>
+    <div id="editorContainer">
+        <textarea id="editor" placeholder="Write your HTML code here..."></textarea>
+        <button onclick="updatePreview()">Run</button>
+    </div>
+    <iframe id="preview"></iframe>
+
+    <div id="settingsPanel">
+        <h3>Settings</h3>
+        <label>
+            <input type="checkbox" id="lineNumbers" checked>
+            Show Line Numbers
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="autoCloseTags" checked>
+            Auto Close Tags
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="matchBrackets" checked>
+            Match Brackets
+        </label>
+        <br>
+        <label>
+            Theme:
+            <select id="theme">
+                <option value="material">Material</option>
+                <option value="default">Default</option>
+                <option value="dracula">Dracula</option>
+            </select>
+        </label>
+        <br>
+        <label>
+            Font Size:
+            <select id="fontSize">
+                <option value="12px">12px</option>
+                <option value="14px">14px</option>
+                <option value="16px">16px</option>
+                <option value="18px">18px</option>
+            </select>
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="wordWrap">
+            Word Wrap
+        </label>
+        <br>
+        <label>
+            Indentation:
+            <select id="indentation">
+                <option value="spaces">Spaces</option>
+                <option value="tabs">Tabs</option>
+            </select>
+        </label>
+        <button onclick="applySettings()">Apply</button>
+        <button onclick="toggleSettings()">Close</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/closetag.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/matchbrackets.min.js"></script>
+    <script>
+        const editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+            mode: 'htmlmixed',
+            lineNumbers: true,
+            autoCloseTags: true,
+            matchBrackets: true,
+            theme: 'material'
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    editor.setValue(e.target.result);
+                    editor.setOption('readOnly', true);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function updatePreview() {
+            const htmlCode = editor.getValue();
+            const previewFrame = document.getElementById('preview');
+            const preview = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            preview.open();
+            preview.write(htmlCode);
+            preview.close();
+
+            // Minimize editor and maximize preview
+            document.getElementById('editorContainer').style.height = '200px';
+            previewFrame.style.height = '70vh';
+        }
+
+        function toggleSettings() {
+            const settingsPanel = document.getElementById('settingsPanel');
+            settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function applySettings() {
+            const lineNumbers = document.getElementById('lineNumbers').checked;
+            const autoCloseTags = document.getElementById('autoCloseTags').checked;
+            const matchBrackets = document.getElementById('matchBrackets').checked;
+            const theme = document.getElementById('theme').value;
+            const fontSize = document.getElementById('fontSize').value;
+            const wordWrap = document.getElementById('wordWrap').checked;
+            const indentation = document.getElementById('indentation').value;
+
+            editor.setOption('lineNumbers', lineNumbers);
+            editor.setOption('autoCloseTags', autoCloseTags);
+            editor.setOption('matchBrackets', matchBrackets);
+            editor.setOption('theme', theme);
+            editor.getWrapperElement().style.fontSize = fontSize;
+            editor.refresh();
+            editor.setOption('lineWrapping', wordWrap);
+            editor.setOption('indentWithTabs', indentation === 'tabs');
+            editor.setOption('indentUnit', indentation === 'tabs' ? 4 : 2);
+
+            toggleSettings();
+        }
+    </script>
+</body>
+</html>

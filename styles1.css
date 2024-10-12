@@ -1,0 +1,108 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #7fff00, #00ff00, #00ff7f, #00ffff, #007fff, #0000ff, #7f00ff, 
+    #ff00ff, #ff007f, #ff4d4d, #ff6600, #ffcc00, #ccff00, #00ff66, #00ffcc, #00ccff, #0066ff, #3300ff, #6600cc, #cc00ff, #ff00cc,
+    #ff3385, #ff5050, #ffa500, #ffd700, #adff2f, #32cd32, #40e0d0, #4682b4, #483d8b, #9400d3, #ff1493, #ff69b4, #ffa07a, #20b2aa, 
+    #87cefa, #b0e0e6, #dda0dd);
+    background-size: 600% 600%;
+    animation: gradientBG 160s ease infinite;
+}
+
+.content-box {
+    background: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+    padding: 70px;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.75); /* Optional box shadow for a subtle effect */
+    width: 390px;
+}
+
+.logo img {
+    width: 210px;
+    height: auto;
+}
+
+.company-name {
+    margin: 20px 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid red;
+    border-radius: 65px;
+    font-size: 16px;
+}
+
+.login-button {
+    padding: 12px;
+    background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(0,255,0,1) 50%, rgba(0,0,255,1) 100%);
+    background-size: 300% 300%;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: buttonBG 8s ease infinite;
+    position: relative;
+}
+
+.login-button:hover {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.arrow {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.login-button:hover .arrow {
+    transform: translateX(5px); /* Moves the arrow to the right */
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    2.5% { background-position: 50% 50%; }
+    5% { background-position: 100% 50%; }
+    7.5% { background-position: 50% 100%; }
+    10% { background-position: 0% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes buttonBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
